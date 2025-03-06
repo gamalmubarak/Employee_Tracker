@@ -144,3 +144,34 @@ export const updateEmployeeRole = async () => {
     await pool.query('UPDATE employee SET role_id = $1 WHERE id = $2', [answers.role_id, answers.employee_id]);
     console.log(`Updated employee's role in the database`);
   };
+  // Function to update an employee's manager
+export const updateEmployeeManager = async () => {
+    const employees = await pool.query('SELECT id, first_name, last_name FROM employee');
+    const employeeChoices = employees.rows.map(employee => ({
+      name: `${employee.first_name} ${employee.last_name}`,
+      value: employee.id,
+    }));
+  
+    const managers = await pool.query('SELECT id, first_name, last_name FROM employee');
+    const managerChoices = managers.rows.map(manager => ({
+      name: `${manager.first_name} ${manager.last_name}`,
+      value: manager.id,
+    }));
+  
+    const answers = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'employee_id',
+        message: 'Select the employee to update:',
+        choices: employeeChoices,
+      },
+      {
+        type: 'list',
+        name: 'manager_id',
+        message: 'Select the new manager for the employee:',
+        choices: managerChoices,
+      },
+    ]);
+    await pool.query('UPDATE employee SET manager_id = $1 WHERE id = $2', [answers.manager_id, answers.employee_id]);
+    console.log(`Updated employee's manager in the database`);
+  };
