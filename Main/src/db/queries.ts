@@ -258,3 +258,22 @@ export const deleteRole = async () => {
     await pool.query('DELETE FROM role WHERE id = $1', [answers.role_id]);
     console.log(`Deleted role from the database`);
   };
+  // Function to delete an employee
+export const deleteEmployee = async () => {
+    const employees = await pool.query('SELECT id, first_name, last_name FROM employee');
+    const employeeChoices = employees.rows.map(employee => ({
+      name: `${employee.first_name} ${employee.last_name}`,
+      value: employee.id,
+    }));
+  
+    const answers = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'employee_id',
+        message: 'Choose the employee you want to delete:',
+        choices: employeeChoices,
+      },
+    ]);
+    await pool.query('DELETE FROM employee WHERE id = $1', [answers.employee_id]);
+    console.log(`Deleted employee from the database`);
+  };
