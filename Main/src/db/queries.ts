@@ -189,3 +189,34 @@ export const viewEmployeesByManager = async () => {
     `);
     console.table(result.rows);
   };
+  // Function to prompt for department selection
+export const departmentPrompt = () => {
+    return inquirer.prompt([
+      {
+        type: 'list',
+        name: 'department_id',
+        message: 'Which department would you like to see employees for?',
+        choices: [
+          { name: 'Sales', value: 1 },
+          { name: 'Engineering', value: 2 },
+          { name: 'Human Resources', value: 3 },
+          { name: 'Marketing', value: 4 },
+        ],
+      },
+    ]);
+  };
+  
+  // Function to view employees by department
+  export const viewEmployeesByDepartment = async () => {
+    const answers = await departmentPrompt();
+    const result = await pool.query(`
+      SELECT e.id, e.first_name, e.last_name, r.title AS job_title, d.name AS department, r.salary, 
+             COALESCE(m.first_name || ' ' || m.last_name, 'None') AS manager
+      FROM employee e
+      JOIN role r ON e.role_id = r.id
+      JOIN department d ON r.department_id = d.id
+      LEFT JOIN employee m ON e.manager_id = m.id
+      WHERE r.department_id = $1
+    `, [answers.department_id]);
+    console.table(result.rows);
+  };
