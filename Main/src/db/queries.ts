@@ -277,3 +277,14 @@ export const deleteEmployee = async () => {
     await pool.query('DELETE FROM employee WHERE id = $1', [answers.employee_id]);
     console.log(`Deleted employee from the database`);
   };
+  // Function to view the total utilized budget of each department
+export const viewDepartmentBudget = async () => {
+    const result = await pool.query(`
+      SELECT d.name AS department, SUM(r.salary) AS total_budget
+      FROM employee e
+      JOIN role r ON e.role_id = r.id
+      JOIN department d ON r.department_id = d.id
+      GROUP BY d.name
+    `);
+    console.table(result.rows);
+  };
