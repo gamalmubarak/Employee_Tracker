@@ -220,3 +220,22 @@ export const departmentPrompt = () => {
     `, [answers.department_id]);
     console.table(result.rows);
   };
+  // Function to delete a department
+export const deleteDepartment = async () => {
+    const departments = await pool.query('SELECT id, name FROM department');
+    const departmentChoices = departments.rows.map(department => ({
+      name: department.name,
+      value: department.id,
+    }));
+  
+    const answers = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'department_id',
+        message: 'Choose the department you want to delete:',
+        choices: departmentChoices,
+      },
+    ]);
+    await pool.query('DELETE FROM department WHERE id = $1', [answers.department_id]);
+    console.log(`Deleted department from the database`);
+  };
