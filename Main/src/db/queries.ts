@@ -36,3 +36,33 @@ export const addDepartment = async () => {
     await pool.query('INSERT INTO department (name) VALUES ($1)', [answers.name]);
     console.log(`Added ${answers.name} to the database`);
   };
+  // Function to add a new role
+export const addRole = async () => {
+    const departments = await pool.query('SELECT id, name FROM department');
+    const departmentChoices = departments.rows.map(department => ({
+      name: department.name,
+      value: department.id,
+    }));
+  
+    const answers = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'title',
+        message: 'Enter the title of the role:',
+      },
+      {
+        type: 'input',
+        name: 'salary',
+        message: 'Enter the salary of the role:',
+      },
+      {
+        type: 'list',
+        name: 'department_id',
+        message: 'Enter the department for the role:',
+        choices: departmentChoices,
+      },
+    ]);
+    await pool.query('INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)', [answers.title, answers.salary, answers.department_id]);
+    console.log(`Added ${answers.title} to the database`);
+  };
+  
