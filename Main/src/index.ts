@@ -1,5 +1,5 @@
 import inquirer from 'inquirer';
-
+import { viewAllDepartments, viewAllRoles, viewAllEmployees, addDepartment, addRole, addEmployee, updateEmployeeRole, updateEmployeeManager, viewEmployeesByManager, viewEmployeesByDepartment, deleteDepartment, deleteRole, deleteEmployee, viewDepartmentBudget } from './db/queries.js';
 // Main prompt function
 export const mainPrompt = async () => {
     const answers = await inquirer.prompt([
