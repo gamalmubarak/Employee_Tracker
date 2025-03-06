@@ -175,3 +175,17 @@ export const updateEmployeeManager = async () => {
     await pool.query('UPDATE employee SET manager_id = $1 WHERE id = $2', [answers.manager_id, answers.employee_id]);
     console.log(`Updated employee's manager in the database`);
   };
+  // Function to view employees by manager
+export const viewEmployeesByManager = async () => {
+    const result = await pool.query(`
+      SELECT m.id AS manager_id, m.first_name AS manager_first_name, m.last_name AS manager_last_name, 
+             e.id AS employee_id, e.first_name AS employee_first_name, e.last_name AS employee_last_name, 
+             r.title AS employee_role
+      FROM employee e
+      LEFT JOIN employee m ON e.manager_id = m.id
+      LEFT JOIN role r ON e.role_id = r.id
+      WHERE e.manager_id IS NOT NULL
+      ORDER BY m.id, e.id
+    `);
+    console.table(result.rows);
+  };
