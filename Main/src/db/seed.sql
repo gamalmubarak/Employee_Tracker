@@ -1,4 +1,5 @@
 -- seeds.sql
+--Connect to the Database
 \c employees_db
 
 -- Insert initial department
