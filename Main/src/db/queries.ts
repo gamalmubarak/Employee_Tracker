@@ -65,4 +65,51 @@ export const addRole = async () => {
     await pool.query('INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)', [answers.title, answers.salary, answers.department_id]);
     console.log(`Added ${answers.title} to the database`);
   };
-  
+  // Function to add a new employee
+export const addEmployee = async () => {
+    const answers = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'first_name',
+        message: 'What is the employee\'s first name?',
+      },
+      {
+        type: 'input',
+        name: 'last_name',
+        message: 'What is the employee\'s last name?',
+      },
+      {
+        type: 'list',
+        name: 'role_id',
+        message: 'What is the employee\'s role?',
+        choices: [
+          { name: 'Sales Manager', value: 1 },
+          { name: 'Sales Associate', value: 2 },
+          { name: 'Software Engineer', value: 3 },
+          { name: 'Data Scientist', value: 4 },
+          { name: 'HR Manager', value: 5 },
+          { name: 'Recruiter', value: 6 },
+          { name: 'Marketing Manager', value: 7 },
+          { name: 'Content Writer', value: 8 },
+        ],
+      },
+      {
+        type: 'list',
+        name: 'manager_id',
+        message: 'Who is the employee\'s manager?',
+        choices: [
+          { name: 'None', value: null },
+          { name: 'John Doe', value: 1 },
+          { name: 'Jane Smith', value: 2 },
+          { name: 'Alice Johnson', value: 3 },
+          { name: 'Bob Brown', value: 4 },
+          { name: 'Charlie Davis', value: 5 },
+          { name: 'Eve Wilson', value: 6 },
+          { name: 'Frank Miller', value: 7 },
+          { name: 'Gamal Mubarak', value: 8 },
+        ],
+      },
+    ]);
+    await pool.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4)', [answers.first_name, answers.last_name, answers.role_id, answers.manager_id]);
+    console.log(`Added ${answers.first_name} ${answers.last_name} to the database`);
+  };
